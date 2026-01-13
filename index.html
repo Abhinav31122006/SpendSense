@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Personal Expense Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Header -->
+    <header class="header">
+      <h1>💰 Expense Tracker</h1>
+      <p>Track your spending & stay within budget</p>
+    </header>
+
+    <!-- Budget Section -->
+    <section class="budget-card">
+      <h2>Monthly Budget</h2>
+
+      <div class="budget-input">
+        <input type="number" placeholder="Enter budget amount" />
+        <button>Set Budget</button>
+      </div>
+
+      <div class="budget-info">
+        <div>
+          <span>Total Spent</span>
+          <strong>₹0</strong>
+        </div>
+        <div>
+          <span>Remaining</span>
+          <strong>₹0</strong>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+    </section>
+
+    <!-- Add Expense -->
+    <section class="expense-card">
+      <h2>Add Expense</h2>
+
+      <form class="expense-form">
+        <input type="number" placeholder="Amount" />
+        <select>
+          <option value="">Select Category</option>
+          <option>Food</option>
+          <option>Travel</option>
+          <option>Study</option>
+          <option>Entertainment</option>
+          <option>Other</option>
+        </select>
+        <input type="date" />
+        <input type="text" placeholder="Note (optional)" />
+        <button type="button">Add Expense</button>
+      </form>
+    </section>
+
+    <!-- Expense List -->
+    <section class="list-card">
+      <h2>Expenses</h2>
+
+      <ul class="expense-list">
+        <!-- Sample static item for UI preview -->
+        <li class="expense-item">
+          <div class="left">
+            <span class="category food">Food</span>
+            <small>12 Jan 2026</small>
+          </div>
+          <div class="right">
+            <strong>₹250</strong>
+            <button>✕</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Expense Distribution Chart -->
+    <section class="chart-card">
+      <h2>Expense Distribution</h2>
+
+      <div class="chart-wrapper">
+        <canvas id="donutChart" width="220" height="220"></canvas>
+
+        <ul class="chart-legend">
+          <li><span class="dot food"></span> Food</li>
+          <li><span class="dot travel"></span> Travel</li>
+          <li><span class="dot study"></span> Study</li>
+          <li><span class="dot other"></span> Other</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Background */
+body {
+  background: linear-gradient(135deg, #1f2933, #111827);
+  min-height: 100vh;
+  color: #e5e7eb;
+  display: flex;
+  justify-content: center;
+  padding: 40px 15px;
+}
+
+/* App Container */
+.app {
+  width: 100%;
+  max-width: 900px;
+  display: grid;
+  gap: 25px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 5px;
+}
+
+.header p {
+  color: #9ca3af;
+}
+
+/* Cards */
+section {
+  background: #111827;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+h2 {
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+/* Budget */
+.budget-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.budget-input input {
+  flex: 1;
+}
+
+.budget-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.budget-info span {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #1f2933;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+/* Expense Form */
+.expense-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.expense-form input[type="text"],
+.expense-form button {
+  grid-column: span 2;
+}
+
+/* Inputs */
+input, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #1f2933;
+  color: #e5e7eb;
+}
+
+input::placeholder {
+  color: #9ca3af;
+}
+
+input:focus, select:focus {
+  outline: 2px solid #3b82f6;
+}
+
+/* Buttons */
+button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+/* Expense List */
+.expense-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f2933;
+  padding: 14px;
+  border-radius: 10px;
+}
+
+.expense-item .left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.expense-item small {
+  color: #9ca3af;
+}
+
+.expense-item .right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.expense-item button {
+  background: #ef4444;
+}
+
+.expense-item button:hover {
+  background: #dc2626;
+}
+
+/* Category Tags */
+.category {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  width: fit-content;
+}
+
+.category.food {
+  background: #22c55e;
+  color: #052e16;
+}
+
+.category.travel {
+  background: #3b82f6;
+  color: #eff6ff;
+}
+
+.category.study {
+  background: #facc15;
+  color: #422006;
+}
+
+.category.other {
+  background: #ef4444;
+  color: #fee2e2;
+}
+
+/* Chart Card */
+.chart-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+#donutChart {
+  background: #0f172a;
+  border-radius: 50%;
+}
+
+/* Legend */
+.chart-legend {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chart-legend li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dot.food { background: #22c55e; }
+.dot.travel { background: #3b82f6; }
+.dot.study { background: #facc15; }
+.dot.other { background: #ef4444; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .expense-form {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-form input,
+  .expense-form select,
+  .expense-form button {
+    grid-column: span 1;
+  }
+
+  .chart-wrapper {
+    flex-direction: column;
+  }
+}
