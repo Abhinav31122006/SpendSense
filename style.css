@@ -460,25 +460,88 @@ button {
    LIGHT THEME
 ======================= */
 body.light {
-  background: #f5f5f5;
-  color: #111;
+  background: #ededed; /* slightly darker than cards */
+  color: #1a1a1a;
 }
 
 body.light section {
   background: #ffffff;
-  border-color: #ddd;
+  border-color: #e1e1e1;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
 }
 
 body.light input,
 body.light select {
-  background: #fff;
-  color: #111;
-  border-color: #ccc;
+  background: #f7f7f7;
+  color: #1a1a1a;
+  border-color: #d6d6d6;
 }
+
+body.light input:focus,
+body.light select:focus {
+  border-color: #e50914;
+}
+
 
 body.light .chart-panel,
 body.light .plan-card,
 body.light .expense-item {
-  background: #fff;
+  background: #ffffff;
+  border-color: #e1e1e1;
+}
+
+body.light .plan-card:not(.active) {
+  opacity: 0.92;
+}
+
+body.light .header h1 {
+  color: #d61f1f;
+  text-shadow: none;
+}
+
+body.light .header {
+  margin-bottom: 12px;
+}
+
+body.light .header p {
+  color: #6b6b6b;
+}
+
+body.light .theme-toggle {
+  background: #ffffff;
   border-color: #ddd;
+  color: #444;
+}
+
+body.light button {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+body.light .plan-card.active {
+  border-color: #e10600;
+  box-shadow: 0 0 0 1px #e10600;
+}
+
+body.light .plan-card.active .plan-btn {
+  background: #e10600;
+  color: #fff;
+}
+
+body.light .chart-panel h3 {
+  color: #5f5f5f;
+  font-weight: 600;
+}
+
+body.light .chart-legend {
+  color: #555;
+}
+
+body.light .chart-legend li {
+  font-weight: 500;
+}
+
+body.light .budget-info span,
+body.light .expense-item small,
+body.light .plan-desc {
+  color: #5f5f5f;
 }
