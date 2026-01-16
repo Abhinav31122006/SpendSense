@@ -177,16 +177,29 @@ section h2::after {
 
 /* Progress */
 .progress-bar {
+  position: relative;
   height: 10px;
   background: #2a2a2a;
   border-radius: 8px;
   overflow: hidden;
 }
 
-.progress {
+.progress-spent {
+  position: absolute;
+  left: 0;
+  top: 0;
   height: 100%;
+  background: #e50914; /* spent */
   width: 0%;
-  background: #e50914;
+}
+
+.progress-remaining {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  background: #2ecc71; /* remaining */
+  width: 0%;
 }
 
 /* =======================
