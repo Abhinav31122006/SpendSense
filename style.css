@@ -91,6 +91,37 @@ section h2::after {
   background: #e50914;
 }
 
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.expense-lock-btn {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 6px;
+  color: #8c8c8c;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.expense-lock-btn:hover {
+  color: #ff2c2c;
+  border-color: #ff2c2c;
+}
+
+.expense-lock-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.expense-lock-btn.unlocked {
+  color: #ff2c2c;
+  border-color: #ff2c2c;
+}
+
 /* =======================
    BUDGET SECTION
 ======================= */
@@ -191,6 +222,7 @@ section h2::after {
   height: 100%;
   background: #e50914; /* spent */
   width: 0%;
+  z-index: 2;
 }
 
 .progress-remaining {
@@ -200,6 +232,7 @@ section h2::after {
   height: 100%;
   background: #2ecc71; /* remaining */
   width: 0%;
+  z-index: 1;
 }
 
 /* =======================
@@ -313,26 +346,98 @@ button {
   display: flex;
   justify-content: space-between;
   background: #141414;
-  padding: 14px;
-  border-radius: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
   border: 1px solid #2a2a2a;
+  align-items: center;
 }
 
 .expense-item small {
   color: #b3b3b3;
 }
+.expense-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.expense-header {
+  display: grid;
+  grid-template-columns: auto 90px;
+  align-items: center;
+  gap: 12px;
+}
+
+.expense-date {
+  text-align: right;
+  color: #9a9a9a;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.expense-note {
+  display: block;
+  margin-top: 2px;
+  line-height: 1.2;
+  margin-left: 24px;
+  font-size: 0.78rem;
+  color: #8a8a8a;
+}
+
+.expense-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: #8c8c8c;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.remove-btn:hover {
+  color: #ff2c2c;
+  transform: scale(1.1);
+}
+
+.remove-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
 
 .category {
-  padding: 4px 9px;
+  background: none;
+  padding: 0;
   border-radius: 6px;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
 }
 
-.category.self-improvement {
-  background: #1abc9c;
-  color: #083b34;
+.category-dot {
+  width: 7px;
+  height: 7px;
+  opacity: 0.9;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
+
+.category-dot.food { background: #2ecc71; }
+.category-dot.travel { background: #3498db; }
+.category-dot.self-improvement { background: #1abc9c; }
+.category-dot.entertainment { background: #9b59b6; }
+.category-dot.other { background: #e74c3c; }
+
 
 /* =======================
    SPENDING PLANS
@@ -557,4 +662,8 @@ body.light .budget-info span,
 body.light .expense-item small,
 body.light .plan-desc {
   color: #5f5f5f;
+}
+
+body:not(.light) input[type="date"] {
+  color-scheme: dark;
 }
