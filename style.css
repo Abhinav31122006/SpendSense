@@ -333,11 +333,30 @@ button {
   border-radius: 50%;
 }
 
-.dot.food { background: #2ecc71; }
-.dot.travel { background: #3498db; }
-.dot.self-improvement { background: #1abc9c; }
-.dot.entertainment { background: #9b59b6; }
-.dot.other { background: #e74c3c; }
+.dot.food {
+  background: #3DFF8E;
+  box-shadow: 0 0 6px rgba(61, 255, 142, 0.6);
+}
+
+.dot.travel {
+  background: #4DA6FF;
+  box-shadow: 0 0 6px rgba(77, 166, 255, 0.6);
+}
+
+.dot.self-improvement {
+  background: #2EF2C9;
+  box-shadow: 0 0 6px rgba(46, 242, 201, 0.6);
+}
+
+.dot.entertainment {
+  background: #C77DFF;
+  box-shadow: 0 0 6px rgba(199, 125, 255, 0.6);
+}
+
+.dot.other {
+  background: #FF5C5C;
+  box-shadow: 0 0 6px rgba(255, 92, 92, 0.6);
+}
 
 
 /* =======================
@@ -480,11 +499,60 @@ button {
   flex-shrink: 0;
 }
 
-.category-dot.food { background: #2ecc71; }
-.category-dot.travel { background: #3498db; }
-.category-dot.self-improvement { background: #1abc9c; }
-.category-dot.entertainment { background: #9b59b6; }
-.category-dot.other { background: #e74c3c; }
+.category-dot.food {
+  background: #3DFF8E;
+  body:not(.light) .category-dot.food {
+    box-shadow: 0 0 6px rgba(61, 255, 142, 0.6);
+  }
+
+  body.light .category-dot.food {
+    box-shadow: 0 0 4px rgba(61, 255, 142, 0.35);
+  }
+}
+
+.category-dot.travel {
+  background: #4DA6FF;
+  body:not(.light) .category-dot.food {
+    box-shadow: 0 0 6px rgba(61, 255, 142, 0.6);
+  }
+
+  body.light .category-dot.food {
+    box-shadow: 0 0 4px rgba(61, 255, 142, 0.35);
+  }
+}
+
+.category-dot.self-improvement {
+  background: #2EF2C9;
+  body:not(.light) .category-dot.food {
+    box-shadow: 0 0 6px rgba(61, 255, 142, 0.6);
+  }
+
+  body.light .category-dot.food {
+    box-shadow: 0 0 4px rgba(61, 255, 142, 0.35);
+  }
+}
+
+.category-dot.entertainment {
+  background: #C77DFF;
+  body:not(.light) .category-dot.food {
+    box-shadow: 0 0 6px rgba(61, 255, 142, 0.6);
+  }
+
+  body.light .category-dot.food {
+    box-shadow: 0 0 4px rgba(61, 255, 142, 0.35);
+  }
+}
+
+.category-dot.other {
+  background: #FF5C5C;
+  body:not(.light) .category-dot.food {
+    box-shadow: 0 0 6px rgba(61, 255, 142, 0.6);
+  }
+
+  body.light .category-dot.food {
+    box-shadow: 0 0 4px rgba(61, 255, 142, 0.35);
+  }
+}
 
 
 /* =======================

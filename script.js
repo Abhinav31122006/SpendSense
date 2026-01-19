@@ -116,11 +116,11 @@ const planUnlockIcon = planLockBtn.querySelector(".unlock-icon");
 ====================================================== */
 
 const CATEGORY_COLORS = {
-  Food: "#2ecc71",
-  Travel: "#3498db",
-  "Self Improvement": "#1abc9c",
-  Entertainment: "#9b59b6",
-  Other: "#e74c3c"
+  Food: "#3DFF8E",            // vibrant green
+  Travel: "#4DA6FF",          // electric blue
+  "Self Improvement": "#2EF2C9", // aqua teal
+  Entertainment: "#C77DFF",   // neon purple
+  Other: "#FF5C5C"            // soft red
 };
 
 /* ======================================================
@@ -315,6 +315,8 @@ function drawDonutChart(canvas, dataMap) {
   if (!canvas) return;
 
   const ctx = canvas.getContext("2d");
+  const panel = canvas.closest(".chart-panel");
+  const panelBg = getComputedStyle(panel).backgroundColor;
 
   // Handle high-DPI screens
   const dpr = window.devicePixelRatio || 1;
@@ -365,20 +367,31 @@ function drawDonutChart(canvas, dataMap) {
       startAngle,
       startAngle + sliceAngle
     );
+
+    // glow
+    const isLight = document.body.classList.contains("light");
+
+    ctx.shadowColor = CATEGORY_COLORS[category];
+    ctx.shadowBlur = isLight ? 6 : 12;
+
+    // stroke
     ctx.strokeStyle = CATEGORY_COLORS[category];
     ctx.lineWidth = radius - innerRadius;
     ctx.stroke();
 
+    // reset shadow (VERY IMPORTANT)
+    ctx.shadowBlur = 0;
+
     startAngle += sliceAngle;
   });
 
-  // Inner hole
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);
-  ctx.fillStyle = document.body.classList.contains("light")
-    ? "#ffffff"
-    : "#141414";
-  ctx.fill();
+// Inner hole
+const isLight = document.body.classList.contains("light");
+
+ctx.beginPath();
+ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);
+ctx.fillStyle = isLight ? "#ffffff" : "#141414";
+ctx.fill();
 }
 
 function updateAnalytics() {
@@ -531,6 +544,12 @@ expenseListEl.addEventListener("click", (e) => {
 themeToggleBtn.addEventListener("click", () => {
   appState.theme = appState.theme === "dark" ? "light" : "dark";
   applyTheme();
+
+  // ⬇️ force repaint AFTER styles apply
+  requestAnimationFrame(() => {
+    updateAnalytics();
+  });
+
   syncExpenseHeight();
   saveState();
 });
