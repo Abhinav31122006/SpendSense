@@ -56,6 +56,27 @@ const expenseLockBtn = document.querySelector(".expense-lock-btn");
 const expenseLockIcon = expenseLockBtn.querySelector(".lock-icon");
 const expenseUnlockIcon = expenseLockBtn.querySelector(".unlock-icon");
 
+/* Analytics Canvases */
+const monthlyChartCanvas = document.querySelector(
+  ".analytics-stack .chart-panel:first-child canvas"
+);
+
+const overallChartCanvas = document.querySelector(
+  ".analytics-stack .chart-panel:last-child canvas"
+);
+
+/* ======================================================
+   ANALYTICS CONSTANTS
+====================================================== */
+
+const CATEGORY_COLORS = {
+  Food: "#2ecc71",
+  Travel: "#3498db",
+  "Self Improvement": "#1abc9c",
+  Entertainment: "#9b59b6",
+  Other: "#e74c3c"
+};
+
 /* ======================================================
    3. LAYOUT / UI HELPERS
 ====================================================== */
@@ -73,7 +94,7 @@ function syncExpenseHeight() {
     analyticsRect.bottom - expensesRect.top;
 
   if (availableHeight > 0) {
-    expenses.style.maxHeight = `${availableHeight}px`;
+    expenses.style.height = `${availableHeight}px`;
   }
 }
 
@@ -95,6 +116,113 @@ function applyTheme() {
 
 function calculateTotalSpent() {
   return appState.expenses.reduce((sum, e) => sum + e.amount, 0);
+}
+
+function getOverallCategoryTotals() {
+  const totals = {};
+
+  appState.expenses.forEach(expense => {
+    totals[expense.category] =
+      (totals[expense.category] || 0) + expense.amount;
+  });
+
+  return totals;
+}
+
+function getMonthlyCategoryTotals() {
+  const totals = {};
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  appState.expenses.forEach(expense => {
+    const [y, m] = expense.date.split("-").map(Number);
+
+    if (y === currentYear && m - 1 === currentMonth) {
+      totals[expense.category] =
+        (totals[expense.category] || 0) + expense.amount;
+    }
+  });
+
+  return totals;
+}
+
+function drawDonutChart(canvas, dataMap) {
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+
+  // Handle high-DPI screens
+  const dpr = window.devicePixelRatio || 1;
+  const size = 290; // fixed donut size
+
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = `${size}px`;
+  canvas.style.height = `${size}px`;
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, size, size);
+
+  const values = Object.values(dataMap);
+  const total = values.reduce((sum, v) => sum + v, 0);
+
+  const centerX = size / 2;
+  const centerY = size / 2;
+  const radius = centerX - 16;
+  const innerRadius = radius * 0.75;
+
+  // Empty state
+  if (total === 0) {
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = "#2a2a2a";
+    ctx.lineWidth = 12;
+    ctx.stroke();
+
+    ctx.fillStyle = "#8c8c8c";
+    ctx.font = "14px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("No data", centerX, centerY);
+    return;
+  }
+
+  let startAngle = -Math.PI / 2;
+
+  Object.entries(dataMap).forEach(([category, value]) => {
+    const sliceAngle = (value / total) * Math.PI * 2;
+
+    ctx.beginPath();
+    ctx.arc(
+      centerX,
+      centerY,
+      radius,
+      startAngle,
+      startAngle + sliceAngle
+    );
+    ctx.strokeStyle = CATEGORY_COLORS[category];
+    ctx.lineWidth = radius - innerRadius;
+    ctx.stroke();
+
+    startAngle += sliceAngle;
+  });
+
+  // Inner hole
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);
+  ctx.fillStyle = document.body.classList.contains("light")
+    ? "#ffffff"
+    : "#141414";
+  ctx.fill();
+}
+
+function updateAnalytics() {
+  const monthlyData = getMonthlyCategoryTotals();
+  const overallData = getOverallCategoryTotals();
+
+  drawDonutChart(monthlyChartCanvas, monthlyData);
+  drawDonutChart(overallChartCanvas, overallData);
 }
 
 function updateBudgetUI() {
@@ -181,7 +309,7 @@ window.addEventListener("resize", syncExpenseHeight);
 expenseLockBtn.addEventListener("click", () => {
   appState.isExpenseLocked = !appState.isExpenseLocked;
 
-  expenseLockBtn.classList.toggle("locked", appState.isExpenseLocked);
+  expenseLockBtn.classList.toggle("unlocked", !appState.isExpenseLocked);
   expenseLockIcon.classList.toggle("visible", appState.isExpenseLocked);
   expenseUnlockIcon.classList.toggle("visible", !appState.isExpenseLocked);
 
@@ -212,6 +340,7 @@ expenseForm.addEventListener("submit", (e) => {
   renderExpenses();
   updateBudgetUI();
   syncExpenseHeight();
+  updateAnalytics();
 
   expenseForm.reset();
   expenseDateInput.value = new Date().toISOString().split("T")[0];
@@ -229,6 +358,7 @@ expenseListEl.addEventListener("click", (e) => {
   renderExpenses();
   updateBudgetUI();
   syncExpenseHeight();
+  updateAnalytics();
 });
 
 /* Theme Toggle */
@@ -271,6 +401,7 @@ applyTheme();
 renderExpenses();
 updateBudgetUI();
 syncExpenseHeight();
+updateAnalytics();
 
 budgetInput.value = appState.budget || "";
 budgetInput.disabled = appState.isBudgetLocked;
@@ -280,7 +411,7 @@ budgetLockBtn.classList.toggle("unlocked", !appState.isBudgetLocked);
 lockIcon.classList.toggle("visible", appState.isBudgetLocked);
 unlockIcon.classList.toggle("visible", !appState.isBudgetLocked);
 
-expenseLockBtn.classList.toggle("unlocked", appState.isExpenseLocked);
+expenseLockBtn.classList.toggle("unlocked", !appState.isExpenseLocked);
 expenseLockIcon.classList.toggle("visible", appState.isExpenseLocked);
 expenseUnlockIcon.classList.toggle("visible", !appState.isExpenseLocked);
 
