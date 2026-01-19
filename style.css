@@ -339,6 +339,36 @@ button {
 .dot.entertainment { background: #9b59b6; }
 .dot.other { background: #e74c3c; }
 
+
+/* =======================
+   SPENDING WARNINGS
+======================= */
+
+.spend-warnings {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(229, 9, 20, 0.08);
+  border: 1px solid rgba(229, 9, 20, 0.25);
+  color: #ffb3b3;
+  font-size: 0.85rem;
+  display: none;
+}
+
+.spend-warnings.visible {
+  display: block;
+}
+
+.spend-warnings ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.spend-warnings li {
+  margin-bottom: 6px;
+}
+
+
 /* =======================
    EXPENSE LIST
 ======================= */
@@ -528,6 +558,40 @@ button {
 .plan-card.active .plan-btn {
   background: #ff2c2c;
   color: #fff;
+}
+
+.plan-lock-btn {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 8px;
+  color: #8c8c8c;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.plan-lock-btn:hover {
+  color: #ff2c2c;
+  border-color: #ff2c2c;
+}
+
+.plan-lock-btn:active {
+  transform: scale(0.96);
+}
+
+.plan-lock-btn.unlocked {
+  color: #ff2c2c;
+  border-color: #ff2c2c;
+}
+
+.plan-lock-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.plan-card.locked {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* =======================

@@ -154,7 +154,7 @@
       <!-- Analytics -->
       <section class="analytics-section" id="analyticsSection">
         <h2>Expense Analytics</h2>
-
+        <div class="spend-warnings" id="spendWarnings"></div>
         <div class="analytics-stack">
 
           <div class="chart-panel">
@@ -197,7 +197,35 @@
 
   <!-- Spending Plans (END) -->
   <section>
-    <h2>Spending Plans</h2>
+    <div class="section-header">
+      <h2>Spending Plans</h2>
+
+      <button class="plan-lock-btn" title="Lock plan selection">
+        <svg class="lock-icon visible"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+          <rect x="4" y="11" width="16" height="9" rx="2"></rect>
+          <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+        </svg>
+
+        <svg class="unlock-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+          <rect x="4" y="11" width="16" height="9" rx="2"></rect>
+          <path d="M8 11V7a4 4 0 0 1 7.5-1.5"></path>
+        </svg>
+      </button>
+    </div>
 
     <div class="plans-grid">
 
@@ -218,11 +246,11 @@
     <h3>Saver Plan</h3>
     <p class="plan-desc">Focus on discipline and long-term savings.</p>
     <ul class="plan-breakdown">
-      <li><span>Food</span><strong>25%</strong></li>
-      <li><span>Travel</span><strong>15%</strong></li>
-      <li><span>Self Improvement</span><strong>25%</strong></li>
-      <li><span>Entertainment</span><strong>10%</strong></li>
-      <li><span>Other</span><strong>25%</strong></li>
+      <li><span>Food</span><span>35%</span></li>
+      <li><span>Travel</span><span>10%</span></li>
+      <li><span>Self Improvement</span><span>25%</span></li>
+      <li><span>Entertainment</span><span>10%</span></li>
+      <li><span>Other</span><span>20%</span></li>
     </ul>
     <button class="plan-btn">Select Plan</button>
   </div>
@@ -231,11 +259,11 @@
     <h3>Lifestyle Plan</h3>
     <p class="plan-desc">Designed for comfort and enjoyment.</p>
     <ul class="plan-breakdown">
-      <li><span>Food</span><strong>35%</strong></li>
-      <li><span>Travel</span><strong>25%</strong></li>
-      <li><span>Self Improvement</span><strong>10%</strong></li>
-      <li><span>Entertainment</span><strong>25%</strong></li>
-      <li><span>Other</span><strong>5%</strong></li>
+      <li><span>Food</span><span>25%</span></li>
+      <li><span>Travel</span><span>25%</span></li>
+      <li><span>Self Improvement</span><span>15%</span></li>
+      <li><span>Entertainment</span><span>30%</span></li>
+      <li><span>Other</span><span>5%</span></li>
     </ul>
     <button class="plan-btn">Select Plan</button>
   </div>

@@ -7,6 +7,7 @@ const appState = {
   budget: 0,
   isBudgetLocked: false,
   isExpenseLocked: false,
+  isPlanLocked: false,
   expenses: [],
   selectedPlan: null,
   streak: {
@@ -25,6 +26,43 @@ if (savedState) {
 function saveState() {
   localStorage.setItem("spendSenseState", JSON.stringify(appState));
 }
+
+/* ======================================================
+   SPENDING PLANS CONFIG
+====================================================== */
+
+const SPENDING_PLANS = {
+  balanced: {
+    name: "Balanced",
+    breakdown: {
+      Food: 0.30,
+      Travel: 0.20,
+      "Self Improvement": 0.20,
+      Entertainment: 0.20,
+      Other: 0.10
+    }
+  },
+  saver: {
+    name: "Saver",
+    breakdown: {
+      Food: 0.35,
+      Travel: 0.10,
+      "Self Improvement": 0.25,
+      Entertainment: 0.10,
+      Other: 0.20
+    }
+  },
+  lifestyle: {
+    name: "Lifestyle",
+    breakdown: {
+      Food: 0.25,
+      Travel: 0.25,
+      "Self Improvement": 0.15,
+      Entertainment: 0.30,
+      Other: 0.05
+    }
+  }
+};
 
 /* ======================================================
    2. DOM REFERENCES
@@ -65,6 +103,14 @@ const overallChartCanvas = document.querySelector(
   ".analytics-stack .chart-panel:last-child canvas"
 );
 
+const planCards = document.querySelectorAll(".plan-card");
+
+const spendWarningsEl = document.getElementById("spendWarnings");
+
+const planLockBtn = document.querySelector(".plan-lock-btn");
+const planLockIcon = planLockBtn.querySelector(".lock-icon");
+const planUnlockIcon = planLockBtn.querySelector(".unlock-icon");
+
 /* ======================================================
    ANALYTICS CONSTANTS
 ====================================================== */
@@ -76,6 +122,12 @@ const CATEGORY_COLORS = {
   Entertainment: "#9b59b6",
   Other: "#e74c3c"
 };
+
+/* ======================================================
+   WARNING CONFIG
+====================================================== */
+
+const WARNING_THRESHOLD = 0.8; // 80%
 
 /* ======================================================
    3. LAYOUT / UI HELPERS
@@ -98,6 +150,100 @@ function syncExpenseHeight() {
   }
 }
 
+function getCategoryBudgets() {
+  if (!appState.selectedPlan || !appState.budget) return null;
+
+  const plan = SPENDING_PLANS[appState.selectedPlan];
+  if (!plan) return null;
+
+  const budgets = {};
+
+  Object.entries(plan.breakdown).forEach(([category, ratio]) => {
+    budgets[category] = Math.round(appState.budget * ratio);
+  });
+
+  return budgets;
+}
+
+function checkCategoryLimits() {
+  if (!appState.selectedPlan || !appState.budget) {
+    spendWarningsEl.classList.remove("visible");
+    spendWarningsEl.innerHTML = "";
+    return;
+  }
+
+  const budgets = getCategoryBudgets();
+  const spending = getCategorySpending();
+
+  const warnings = [];
+
+  Object.keys(budgets).forEach(category => {
+    const limit = budgets[category];
+    const spent = spending[category] || 0;
+
+    if (spent >= limit) {
+      warnings.push(
+        `🔴 <strong>${category}</strong> exceeded its limit (₹${spent} / ₹${limit})`
+      );
+    } else if (spent >= limit * WARNING_THRESHOLD) {
+      warnings.push(
+        `⚠️ <strong>${category}</strong> nearing limit (₹${spent} / ₹${limit})`
+      );
+    }
+  });
+
+  if (warnings.length === 0) {
+    spendWarningsEl.classList.remove("visible");
+    spendWarningsEl.innerHTML = "";
+    return;
+  }
+
+  spendWarningsEl.innerHTML = `
+    <ul>
+      ${warnings.map(w => `<li>${w}</li>`).join("")}
+    </ul>
+  `;
+
+  spendWarningsEl.classList.add("visible");
+}
+
+function activatePlan(planId) {
+  if (appState.isPlanLocked) return;
+
+  if (!appState.budget || appState.budget <= 0) {
+    alert("Please set a budget before selecting a plan.");
+    return;
+  }
+
+  if (!SPENDING_PLANS[planId]) return;
+
+  appState.selectedPlan = planId;
+  saveState();
+
+  updateActivePlanUI();
+  checkCategoryLimits();
+}
+
+function updateActivePlanUI() {
+  planCards.forEach(card => {
+    const planId = card.dataset.plan;
+    const isActive = planId === appState.selectedPlan;
+
+    card.classList.toggle("active", isActive);
+
+    const btn = card.querySelector(".plan-btn");
+    if (btn) {
+      btn.textContent = isActive ? "Selected" : "Select Plan";
+    }
+  });
+}
+
+function updatePlanLockUI() {
+  planCards.forEach(card => {
+    card.classList.toggle("locked", appState.isPlanLocked);
+  });
+}
+
 /* ======================================================
    4. CORE UI & LOGIC FUNCTIONS
 ====================================================== */
@@ -116,6 +262,17 @@ function applyTheme() {
 
 function calculateTotalSpent() {
   return appState.expenses.reduce((sum, e) => sum + e.amount, 0);
+}
+
+function getCategorySpending() {
+  const totals = {};
+
+  appState.expenses.forEach(expense => {
+    totals[expense.category] =
+      (totals[expense.category] || 0) + expense.amount;
+  });
+
+  return totals;
 }
 
 function getOverallCategoryTotals() {
@@ -341,6 +498,7 @@ expenseForm.addEventListener("submit", (e) => {
   updateBudgetUI();
   syncExpenseHeight();
   updateAnalytics();
+  checkCategoryLimits();
 
   expenseForm.reset();
   expenseDateInput.value = new Date().toISOString().split("T")[0];
@@ -359,6 +517,7 @@ expenseListEl.addEventListener("click", (e) => {
   updateBudgetUI();
   syncExpenseHeight();
   updateAnalytics();
+  checkCategoryLimits();
 });
 
 /* Theme Toggle */
@@ -377,6 +536,7 @@ setBudgetBtn.addEventListener("click", () => {
   appState.budget = value;
   saveState();
   updateBudgetUI();
+  checkCategoryLimits();
 });
 
 /* Budget Lock */
@@ -393,6 +553,25 @@ budgetLockBtn.addEventListener("click", () => {
   saveState();
 });
 
+planCards.forEach(card => {
+  card.addEventListener("click", () => {
+    const planId = card.dataset.plan;
+    activatePlan(planId);
+  });
+});
+
+planLockBtn.addEventListener("click", () => {
+  appState.isPlanLocked = !appState.isPlanLocked;
+
+  planLockBtn.classList.toggle("unlocked", !appState.isPlanLocked);
+  planLockIcon.classList.toggle("visible", appState.isPlanLocked);
+  planUnlockIcon.classList.toggle("visible", !appState.isPlanLocked);
+
+  updatePlanLockUI();
+  saveState();
+});
+
+
 /* ======================================================
    6. APPLICATION BOOTSTRAP
 ====================================================== */
@@ -402,6 +581,10 @@ renderExpenses();
 updateBudgetUI();
 syncExpenseHeight();
 updateAnalytics();
+updateActivePlanUI();
+checkCategoryLimits();
+updatePlanLockUI();
+
 
 budgetInput.value = appState.budget || "";
 budgetInput.disabled = appState.isBudgetLocked;
@@ -414,6 +597,11 @@ unlockIcon.classList.toggle("visible", !appState.isBudgetLocked);
 expenseLockBtn.classList.toggle("unlocked", !appState.isExpenseLocked);
 expenseLockIcon.classList.toggle("visible", appState.isExpenseLocked);
 expenseUnlockIcon.classList.toggle("visible", !appState.isExpenseLocked);
+
+planLockBtn.classList.toggle("unlocked", !appState.isPlanLocked);
+planLockIcon.classList.toggle("visible", appState.isPlanLocked);
+planUnlockIcon.classList.toggle("visible", !appState.isPlanLocked);
+
 
 if (!expenseDateInput.value) {
   expenseDateInput.value = new Date().toISOString().split("T")[0];
