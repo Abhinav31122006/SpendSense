@@ -210,12 +210,19 @@ function checkCategoryLimits() {
 function activatePlan(planId) {
   if (appState.isPlanLocked) return;
 
+  // Clicking the same active plan unselects it
+  if (appState.selectedPlan === planId) {
+    appState.selectedPlan = null;
+    saveState();
+    updateActivePlanUI();
+    checkCategoryLimits();
+    return;
+  }
+
   if (!appState.budget || appState.budget <= 0) {
     alert("Please set a budget before selecting a plan.");
     return;
   }
-
-  if (!SPENDING_PLANS[planId]) return;
 
   appState.selectedPlan = planId;
   saveState();

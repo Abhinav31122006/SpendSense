@@ -594,6 +594,13 @@ button {
   pointer-events: none;
 }
 
+.plan-helper-text {
+  margin-top: 6px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+  color: #9a9a9a;
+  line-height: 1.4;
+}
 /* =======================
    RESPONSIVE
 ======================= */
