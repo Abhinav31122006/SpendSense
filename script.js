@@ -1,3 +1,7 @@
+/* ======================================================
+   1. APPLICATION STATE & PERSISTENCE
+====================================================== */
+
 const appState = {
   theme: "dark",
   budget: 0,
@@ -22,21 +26,25 @@ function saveState() {
   localStorage.setItem("spendSenseState", JSON.stringify(appState));
 }
 
+/* ======================================================
+   2. DOM REFERENCES
+====================================================== */
+
+/* Theme */
 const themeToggleBtn = document.querySelector(".theme-toggle");
 const darkIcon = document.querySelector(".dark-icon");
 const lightIcon = document.querySelector(".light-icon");
 
+/* Budget */
 const budgetInput = document.querySelector(".budget-input input");
 const setBudgetBtn = document.querySelector(".set-budget-btn");
 const budgetLockBtn = document.querySelector(".budget-lock-btn");
-
 const totalSpentEl = document.querySelector(".budget-info div:first-child strong");
 const remainingEl = document.querySelector(".budget-info div:last-child strong");
-
 const lockIcon = document.querySelector(".lock-icon");
 const unlockIcon = document.querySelector(".unlock-icon");
 
-
+/* Expenses */
 const expenseForm = document.querySelector(".expense-form");
 const expenseAmountInput = expenseForm.querySelector('input[type="number"]');
 const expenseCategorySelect = expenseForm.querySelector("select");
@@ -47,6 +55,31 @@ const expenseListEl = document.querySelector(".expense-list");
 const expenseLockBtn = document.querySelector(".expense-lock-btn");
 const expenseLockIcon = expenseLockBtn.querySelector(".lock-icon");
 const expenseUnlockIcon = expenseLockBtn.querySelector(".unlock-icon");
+
+/* ======================================================
+   3. LAYOUT / UI HELPERS
+====================================================== */
+
+function syncExpenseHeight() {
+  const analytics = document.getElementById("analyticsSection");
+  const expenses = document.getElementById("expensesSection");
+
+  if (!analytics || !expenses) return;
+
+  const analyticsRect = analytics.getBoundingClientRect();
+  const expensesRect = expenses.getBoundingClientRect();
+
+  const availableHeight =
+    analyticsRect.bottom - expensesRect.top;
+
+  if (availableHeight > 0) {
+    expenses.style.maxHeight = `${availableHeight}px`;
+  }
+}
+
+/* ======================================================
+   4. CORE UI & LOGIC FUNCTIONS
+====================================================== */
 
 function applyTheme() {
   if (appState.theme === "light") {
@@ -85,6 +118,11 @@ function updateBudgetUI() {
   document.querySelector(".progress-remaining").style.width = `${remainingPercent}%`;
 }
 
+function formatDate(dateStr) {
+  const [y, m, d] = dateStr.split("-");
+  return `${d}-${m}-${y}`;
+}
+
 function createExpenseItem(expense, index) {
   const li = document.createElement("li");
   li.className = "expense-item";
@@ -94,57 +132,52 @@ function createExpenseItem(expense, index) {
     .replace(" ", "-");
 
   const noteHTML =
-  expense.note && expense.note !== expense.date
-    ? `<small class="expense-note">${expense.note}</small>`
-    : "";
+    expense.note && expense.note !== expense.date
+      ? `<small class="expense-note">${expense.note}</small>`
+      : "";
 
   li.innerHTML = `
-  <div class="expense-meta">
-    <div class="expense-header">
-      <span class="category ${categoryClass}">
-        <span class="category-dot ${categoryClass}"></span>
-        ${expense.category}
-      </span>
-      <small class="expense-date">${formatDate(expense.date)}</small>
+    <div class="expense-meta">
+      <div class="expense-header">
+        <span class="category ${categoryClass}">
+          <span class="category-dot ${categoryClass}"></span>
+          ${expense.category}
+        </span>
+        <small class="expense-date">${formatDate(expense.date)}</small>
+      </div>
+      ${noteHTML}
     </div>
-    ${noteHTML}
-  </div>
-  <div class="expense-actions">
-    <strong>₹${expense.amount}</strong>
-    <button
-      class="remove-btn"
-      data-index="${index}"
-      title="Remove expense"
-    >
-      &times;
-    </button>
-  </div>
-`;
+    <div class="expense-actions">
+      <strong>₹${expense.amount}</strong>
+      <button class="remove-btn" data-index="${index}" title="Remove expense">
+        &times;
+      </button>
+    </div>
+  `;
 
   return li;
 }
-
-applyTheme();
 
 function renderExpenses() {
   expenseListEl.innerHTML = "";
 
   appState.expenses.forEach((expense, index) => {
-    expenseListEl.appendChild(
-      createExpenseItem(expense, index)
-    );
+    expenseListEl.appendChild(createExpenseItem(expense, index));
   });
-  const removeButtons = expenseListEl.querySelectorAll(".remove-btn");
-  removeButtons.forEach((btn) => {
-    btn.disabled = appState.isExpenseLocked;
-  });
+
+  expenseListEl
+    .querySelectorAll(".remove-btn")
+    .forEach(btn => btn.disabled = appState.isExpenseLocked);
 }
 
-function formatDate(dateStr) {
-  const [y, m, d] = dateStr.split("-");
-  return `${d}-${m}-${y}`;
-}
+/* ======================================================
+   5. EVENT LISTENERS
+====================================================== */
 
+window.addEventListener("load", syncExpenseHeight);
+window.addEventListener("resize", syncExpenseHeight);
+
+/* Expense Lock */
 expenseLockBtn.addEventListener("click", () => {
   appState.isExpenseLocked = !appState.isExpenseLocked;
 
@@ -156,15 +189,15 @@ expenseLockBtn.addEventListener("click", () => {
   saveState();
 });
 
+/* Add Expense */
 expenseForm.addEventListener("submit", (e) => {
   e.preventDefault();
-
 
   const amount = Number(expenseAmountInput.value);
   const category = expenseCategorySelect.value;
   const date =
-  expenseDateInput.value ||
-  new Date().toISOString().split("T")[0];
+    expenseDateInput.value ||
+    new Date().toISOString().split("T")[0];
 
   if (!amount || amount <= 0 || !category || !date) return;
 
@@ -178,11 +211,13 @@ expenseForm.addEventListener("submit", (e) => {
   saveState();
   renderExpenses();
   updateBudgetUI();
+  syncExpenseHeight();
 
   expenseForm.reset();
   expenseDateInput.value = new Date().toISOString().split("T")[0];
 });
 
+/* Remove Expense */
 expenseListEl.addEventListener("click", (e) => {
   if (!e.target.classList.contains("remove-btn")) return;
   if (appState.isExpenseLocked) return;
@@ -193,14 +228,18 @@ expenseListEl.addEventListener("click", (e) => {
   saveState();
   renderExpenses();
   updateBudgetUI();
+  syncExpenseHeight();
 });
 
+/* Theme Toggle */
 themeToggleBtn.addEventListener("click", () => {
   appState.theme = appState.theme === "dark" ? "light" : "dark";
   applyTheme();
+  syncExpenseHeight();
   saveState();
 });
 
+/* Set Budget */
 setBudgetBtn.addEventListener("click", () => {
   const value = Number(budgetInput.value);
   if (!value || value <= 0) return;
@@ -210,6 +249,7 @@ setBudgetBtn.addEventListener("click", () => {
   updateBudgetUI();
 });
 
+/* Budget Lock */
 budgetLockBtn.addEventListener("click", () => {
   appState.isBudgetLocked = !appState.isBudgetLocked;
 
@@ -223,6 +263,15 @@ budgetLockBtn.addEventListener("click", () => {
   saveState();
 });
 
+/* ======================================================
+   6. APPLICATION BOOTSTRAP
+====================================================== */
+
+applyTheme();
+renderExpenses();
+updateBudgetUI();
+syncExpenseHeight();
+
 budgetInput.value = appState.budget || "";
 budgetInput.disabled = appState.isBudgetLocked;
 setBudgetBtn.disabled = appState.isBudgetLocked;
@@ -230,9 +279,6 @@ setBudgetBtn.disabled = appState.isBudgetLocked;
 budgetLockBtn.classList.toggle("unlocked", !appState.isBudgetLocked);
 lockIcon.classList.toggle("visible", appState.isBudgetLocked);
 unlockIcon.classList.toggle("visible", !appState.isBudgetLocked);
-
-renderExpenses();
-updateBudgetUI();
 
 expenseLockBtn.classList.toggle("unlocked", appState.isExpenseLocked);
 expenseLockIcon.classList.toggle("visible", appState.isExpenseLocked);
