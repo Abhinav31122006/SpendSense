@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <title>SpendSense</title>
+  <!-- Link to external stylesheet for styling -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+<!-- Main app container - everything goes inside this -->
 <div class="app">
-  <!-- Theme Toggle -->
+
+<!-- Theme toggle button (fixed position in top-right corner) -->
+<!-- Contains two SVG icons that switch visibility based on current theme -->
 <button class="theme-toggle" title="Toggle theme">
-  <!-- Dark mode icon -->
+  <!-- Moon icon for dark mode (visible by default) -->
   <svg class="theme-icon dark-icon visible"
        xmlns="http://www.w3.org/2000/svg"
        viewBox="0 0 24 24"
@@ -23,7 +27,7 @@
              7 7 0 0 0 21 12.79z"/>
   </svg>
 
-  <!-- Light mode icon -->
+  <!-- Sun icon for light mode (hidden by default) -->
   <svg class="theme-icon light-icon"
        xmlns="http://www.w3.org/2000/svg"
        viewBox="0 0 24 24"
@@ -44,26 +48,28 @@
   </svg>
 </button>
 
-  <!-- Header -->
+  <!-- Page header with title and tagline -->
   <header class="header">
     <h1>SpendSense</h1>
     <p>Intelligent personal expense analysis</p>
   </header>
 
-  <!-- DASHBOARD GRID -->
+  <!-- Main dashboard grid - splits into left and right columns -->
   <div class="dashboard-grid">
 
-    <!-- LEFT COLUMN -->
+    <!-- LEFT COLUMN: Budget, Add Expense form, and Expense List -->
     <div class="left-column">
 
-      <!-- Monthly Budget -->
+      <!-- Budget Section -->
       <section>
         <h2>Monthly Budget</h2>
 
+        <!-- Budget input with lock button -->
         <div class="budget-input">
           <input type="number" placeholder="Enter budget amount" />
           <button class="set-budget-btn">Set Budget</button>
 
+          <!-- Lock button to prevent accidental budget changes -->
           <button class="budget-lock-btn">
             <svg class="lock-icon visible" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <rect x="4" y="11" width="16" height="9" rx="2"></rect>
@@ -76,21 +82,25 @@
           </button>
         </div>
 
+        <!-- Budget info display - shows total spent and remaining -->
+        <!-- JavaScript will dynamically update these values -->
         <div class="budget-info">
           <div><span>Total Spent</span><strong>₹0</strong></div>
           <div><span>Remaining</span><strong>₹0</strong></div>
         </div>
 
+        <!-- Visual progress bar showing budget usage -->
         <div class="progress-bar">
           <div class="progress-spent"></div>
           <div class="progress-remaining"></div>
         </div>
       </section>
 
-      <!-- Add Expense -->
+      <!-- Add Expense Form -->
       <section>
         <h2>Add Expense</h2>
 
+        <!-- Form to add new expenses - prevents page reload on submit -->
         <form class="expense-form">
           <input type="number" placeholder="Amount" />
           <select>
@@ -107,11 +117,13 @@
         </form>
       </section>
 
-      <!-- Expense List (SCROLLABLE) -->
+      <!-- Expense List Section - dynamically populated by JavaScript -->
+      <!-- id="expensesSection" is used for height synchronization -->
       <section class="expense-list-section" id="expensesSection">
         <div class="section-header">
           <h2>Expenses</h2>
 
+          <!-- Lock button to prevent accidental expense deletion -->
           <button class="expense-lock-btn" title="Lock expense removal">
             <svg class="lock-icon visible"
                 xmlns="http://www.w3.org/2000/svg"
@@ -139,30 +151,39 @@
           </button>
         </div>
 
+        <!-- Empty ul that will be filled with expenses via JavaScript -->
+        <!-- Using createElement and appendChild for dynamic content -->
         <ul class="expense-list scrollable">
           
-
-          <!-- More items will scroll -->
         </ul>
       </section>
 
     </div>
 
-    <!-- RIGHT COLUMN -->
+    <!-- RIGHT COLUMN: Analytics and Charts -->
     <div class="right-column">
 
-      <!-- Analytics -->
+      <!-- Analytics Section with Charts -->
+      <!-- id="analyticsSection" is used for height calculations -->
       <section class="analytics-section" id="analyticsSection">
         <h2>Expense Analytics</h2>
+        
+        <!-- Warning container - populated dynamically when limits are reached -->
+        <!-- JavaScript creates warning elements with animations using createElement -->
         <div class="spend-warnings" id="spendWarnings"></div>
+        
         <div class="analytics-stack">
 
+          <!-- Monthly Chart Panel -->
+          <!-- Canvas API is used to draw custom donut charts -->
           <div class="chart-panel">
             <h3>This Month</h3>
 
             <div class="chart-content">
+              <!-- Canvas element for drawing donut chart using Canvas API -->
               <canvas></canvas>
 
+              <!-- Legend showing what each color represents -->
               <ul class="chart-legend">
                 <li><span class="dot food"></span> Food</li>
                 <li><span class="dot travel"></span> Travel</li>
@@ -173,6 +194,7 @@
             </div>
           </div>
 
+          <!-- Overall Chart Panel (all-time data) -->
           <div class="chart-panel">
             <h3>Overall</h3>
 
@@ -195,11 +217,15 @@
     </div>
   </div>
 
-  <!-- Spending Plans (END) -->
+  <!-- Spending Plans Section (full width at bottom) -->
+  <!-- Three predefined budget templates that users can select -->
+  <!-- data-plan attribute is used by JavaScript to identify which plan was clicked -->
   <section>
     <div class="section-header">
       <h2>Spending Plans</h2>
 
+      <!-- Lock button for plans -->
+      <!-- JavaScript toggles .visible class to switch between lock/unlock icons -->
       <button class="plan-lock-btn" title="Lock plan selection">
         <svg class="lock-icon visible"
             xmlns="http://www.w3.org/2000/svg"
