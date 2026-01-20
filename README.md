@@ -106,12 +106,10 @@ Many people struggle to track their daily expenses and understand where their mo
 
 ## Project Structure
 ```
-End_Term_Proj/
-│
-├── index.html    # Main HTML structure
-├── style.css     # All styling (Netflix-inspired theme)
-├── script.js     # Core JavaScript logic
-└── README.md     # This file
+ index.html    # Main HTML structure
+ style.css     # All styling (Netflix-inspired theme)
+ script.js     # Core JavaScript logic
+ README.md     # This file
 ```
 
 ## Technical Highlights
