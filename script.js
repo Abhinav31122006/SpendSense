@@ -120,6 +120,8 @@ const planLockBtn = document.querySelector(".plan-lock-btn");
 const planLockIcon = planLockBtn.querySelector(".lock-icon");
 const planUnlockIcon = planLockBtn.querySelector(".unlock-icon");
 
+const exportBtn = document.querySelector(".export-btn");
+
 // Category colors used in charts and expense items
 const CATEGORY_COLORS = {
   Food: "#FFD700",
@@ -740,3 +742,210 @@ planUnlockIcon.classList.toggle("visible", !appState.isPlanLocked);
 if (!expenseDateInput.value) {
   expenseDateInput.value = new Date().toISOString().split("T")[0];
 }
+
+// ==================================================================
+// EXPORT FUNCTIONALITY
+// ==================================================================
+
+// CSV Export - Downloads expenses as Excel-compatible file
+function exportToCSV() {
+  if (appState.expenses.length === 0) {
+    alert("No expenses to export!");
+    return;
+  }
+
+  // Sort expenses by date (oldest first)
+  const sortedExpenses = [...appState.expenses].sort((a, b) => 
+    new Date(a.date) - new Date(b.date)
+  );
+
+  // Create CSV header
+  let csv = "Date,Category,Amount (₹),Notes\n";
+
+  // Add each expense as a row
+  sortedExpenses.forEach(expense => {
+    const date = expense.date;
+    const category = expense.category;
+    const amount = expense.amount;
+    // Escape notes that contain commas or quotes
+    const notes = expense.note ? `"${expense.note.replace(/"/g, '""')}"` : "";
+    
+    csv += `${date},${category},${amount},${notes}\n`;
+  });
+
+  // Add summary statistics at the bottom
+  const totalSpent = sortedExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+  csv += `\nTotal Spent,,,₹${totalSpent}\n`;
+  csv += `Budget,,,₹${appState.budget}\n`;
+  csv += `Remaining,,,₹${appState.budget - totalSpent}\n`;
+
+  // Create download link
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  
+  // Generate filename with current date
+  const today = new Date().toISOString().split("T")[0];
+  link.setAttribute("href", url);
+  link.setAttribute("download", `SpendSense_Export_${today}.csv`);
+  link.style.visibility = "hidden";
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// Alternative: HTML Table Export - Opens in new window for printing
+function exportToTable() {
+  if (appState.expenses.length === 0) {
+    alert("No expenses to export!");
+    return;
+  }
+
+  // Sort expenses by date
+  const sortedExpenses = [...appState.expenses].sort((a, b) => 
+    new Date(a.date) - new Date(b.date)
+  );
+
+  const totalSpent = sortedExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+  // Create HTML table
+  let html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>SpendSense Expense Report</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 40px;
+          background: #f5f5f5;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 30px;
+        }
+        h1 {
+          color: #e50914;
+          margin-bottom: 5px;
+        }
+        .date {
+          color: #666;
+          font-size: 14px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          background: white;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th, td {
+          padding: 12px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+        th {
+          background: #e50914;
+          color: white;
+          font-weight: 600;
+        }
+        tr:hover {
+          background: #f9f9f9;
+        }
+        .total-row {
+          font-weight: bold;
+          background: #f0f0f0;
+        }
+        .summary {
+          margin-top: 20px;
+          padding: 20px;
+          background: white;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .summary-item {
+          display: flex;
+          justify-content: space-between;
+          margin: 10px 0;
+          padding: 8px;
+          border-bottom: 1px solid #eee;
+        }
+        @media print {
+          body { margin: 0; background: white; }
+          button { display: none; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>SpendSense Expense Report</h1>
+        <p class="date">Generated on ${new Date().toLocaleDateString()}</p>
+        <button onclick="window.print()" style="padding: 10px 20px; background: #e50914; color: white; border: none; border-radius: 5px; cursor: pointer;">Print Report</button>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  sortedExpenses.forEach(expense => {
+    html += `
+          <tr>
+            <td>${expense.date}</td>
+            <td>${expense.category}</td>
+            <td>₹${expense.amount}</td>
+            <td>${expense.note || "-"}</td>
+          </tr>
+    `;
+  });
+
+  html += `
+        </tbody>
+      </table>
+      
+      <div class="summary">
+        <h3>Summary</h3>
+        <div class="summary-item">
+          <span>Total Spent:</span>
+          <strong>₹${totalSpent}</strong>
+        </div>
+        <div class="summary-item">
+          <span>Budget:</span>
+          <strong>₹${appState.budget}</strong>
+        </div>
+        <div class="summary-item">
+          <span>Remaining:</span>
+          <strong>₹${appState.budget - totalSpent}</strong>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  // Open in new window
+  const newWindow = window.open("", "_blank");
+  newWindow.document.write(html);
+  newWindow.document.close();
+}
+
+// Event listener for export button
+exportBtn.addEventListener("click", () => {
+  // Use CSV export by default (Excel compatible)
+  exportToCSV();
+  
+  // If you want to show options, uncomment this:
+  /*
+  const choice = confirm("Export as CSV for Excel?\n\nOK = CSV Download\nCancel = HTML Table View");
+  if (choice) {
+    exportToCSV();
+  } else {
+    exportToTable();
+  }
+  */
+});
