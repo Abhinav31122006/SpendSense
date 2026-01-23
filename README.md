@@ -41,13 +41,21 @@ Many people struggle to track their daily expenses and understand where their mo
 - Two-level alerts: "Near Limit" (80%) and "Limit Exceeded" (100%)
 - Visual indicators with icons, progress bars, and percentage displays
 
-### 6. **Theme Toggle**
+### 6. **Export Functionality**
+- Export expenses to CSV format (Excel-compatible)
+- Includes date, category, amount, and notes for each expense
+- Automatically sorted chronologically
+- Summary statistics included (total spent, budget, remaining)
+- Timestamped filename for easy organization
+- Alternative HTML table view for printing
+
+### 7. **Theme Toggle**
 - Switch between dark and light themes
 - Netflix-inspired dark theme with dramatic shadows
 - Clean light theme with better contrast
 - Theme preference saved in localStorage
 
-### 7. **Data Persistence**
+### 8. **Data Persistence**
 - All data stored in browser's localStorage
 - State automatically restored on page reload
 - Includes budget, expenses, selected plan, lock states, and theme preference
@@ -91,10 +99,17 @@ Many people struggle to track their daily expenses and understand where their mo
 - JSON serialization/deserialization for complex data structures
 - Error handling with try-catch for corrupted data
 
+### 7. **Blob API & File Downloads**
+- `Blob()` for creating CSV file content
+- `URL.createObjectURL()` for generating download links
+- Programmatic file downloads via dynamically created anchor elements
+- CSV formatting with proper escaping for special characters
+
 ## How to Run the Project
 
 1. **Clone or Download** the project folder
-2. **Open `index.html`** in any modern browser (Chrome, Firefox, Safari, Edge)
+2. **Export your expense statements to CSV
+   - Open `index.html`** in any modern browser (Chrome, Firefox, Safari, Edge)
 3. **Start using the app**:
    - Set your monthly budget
    - Add expenses with categories
@@ -140,8 +155,6 @@ Many people struggle to track their daily expenses and understand where their mo
 
 ## Known Limitations
 
-1. **Browser-specific storage**: Data is stored only in the current browser. Clearing browser data will delete all expenses.
-
 2. **No backend**: This is a client-side only application. Data cannot be synced across devices.
 
 3. **Single user**: Designed for individual use, not multi-user scenarios.
@@ -154,10 +167,11 @@ Many people struggle to track their daily expenses and understand where their mo
 - Monthly/yearly comparison charts
 - Custom spending plans
 - Data export to CSV
+- PDF export with formatted reports
 - Recurring expense support
 - Budget rollover feature
 - Multiple budget periods
-
+- Cloud sync across device
 ## Learning Outcomes
 
 Through this project, I learned:
