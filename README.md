@@ -108,13 +108,13 @@ Many people struggle to track their daily expenses and understand where their mo
 ## How to Run the Project
 
 1. **Clone or Download** the project folder
-2. **Export your expense statements to CSV
-   - Open `index.html`** in any modern browser (Chrome, Firefox, Safari, Edge)
+2. **Open `index.html`** in any modern browser (Chrome, Firefox, Safari, Edge)
 3. **Start using the app**:
    - Set your monthly budget
    - Add expenses with categories
    - Watch the charts update in real-time
    - Select a spending plan to get category-wise warnings
+   - Export your expense statements to CSV
    - Toggle between light/dark themes
 
 **No server or build tools required!** Everything runs purely in the browser.
@@ -155,23 +155,22 @@ Many people struggle to track their daily expenses and understand where their mo
 
 ## Known Limitations
 
+1. **Browser-specific storage**: Data is stored only in the current browser. Clearing browser data will delete all expenses.
+
 2. **No backend**: This is a client-side only application. Data cannot be synced across devices.
 
 3. **Single user**: Designed for individual use, not multi-user scenarios.
-
-4. **No export**: Currently no option to export expense data to CSV or PDF.
 
 ## Future Enhancements (Ideas)
 
 - Add expense editing functionality
 - Monthly/yearly comparison charts
 - Custom spending plans
-- Data export to CSV
 - PDF export with formatted reports
 - Recurring expense support
 - Budget rollover feature
 - Multiple budget periods
-- Cloud sync across device
+- Cloud sync across devices
 ## Learning Outcomes
 
 Through this project, I learned:
@@ -180,6 +179,7 @@ Through this project, I learned:
 - Dynamic DOM manipulation and event delegation
 - Canvas API for custom visualizations
 - LocalStorage for client-side persistence
+- Blob API and programmatic file downloads
 - Creating responsive, interactive user interfaces
 - Organizing CSS for maintainability
 
