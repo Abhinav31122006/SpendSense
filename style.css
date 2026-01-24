@@ -968,13 +968,73 @@ button:active {
    ================================================================== */
 /* Adjust layout for smaller screens using media queries */
 
+/* Tablet and below (900px) */
 @media (max-width: 900px) {
+  body {
+    padding: 24px 12px;
+  }
+
+  .header h1 {
+    font-size: 2.2rem;
+  }
+
+  .header p {
+    font-size: 0.95rem;
+  }
+
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
 
   .plans-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .chart-content {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .chart-panel {
+    height: auto;
+    min-height: 380px;
+  }
+
+  section {
+    padding: 20px;
+  }
+}
+
+/* Mobile landscape and small tablets (700px) */
+@media (max-width: 700px) {
+  body {
+    padding: 20px 10px;
+  }
+
+  .app {
+    gap: 20px;
+  }
+
+  .header h1 {
+    font-size: 1.9rem;
+  }
+
+  .header p {
+    font-size: 0.9rem;
+  }
+
+  section {
+    padding: 18px;
+  }
+
+  section h2 {
+    font-size: 1.25rem;
+  }
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 
   .expense-form {
@@ -985,6 +1045,250 @@ button:active {
   .expense-form select,
   .expense-form button {
     grid-column: span 1;
+  }
+
+  .chart-panel {
+    min-height: 350px;
+    padding: 16px;
+  }
+
+  .budget-input {
+    flex-wrap: wrap;
+  }
+
+  .budget-input input {
+    width: 100%;
+  }
+
+  .set-budget-btn {
+    flex: 1;
+  }
+
+  .export-btn {
+    font-size: 13px;
+    padding: 7px 12px;
+  }
+
+  .export-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Mobile portrait (480px) */
+@media (max-width: 480px) {
+  body {
+    padding: 16px 8px;
+  }
+
+  .app {
+    gap: 16px;
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+    letter-spacing: 0.2px;
+  }
+
+  .header p {
+    font-size: 0.85rem;
+    margin-top: 6px;
+  }
+
+  .left-column,
+  .right-column {
+    gap: 16px;
+  }
+
+  section {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  section h2 {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+  }
+
+  .budget-input {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .budget-input input,
+  .set-budget-btn,
+  .budget-lock-btn {
+    width: 100%;
+  }
+
+  .budget-info {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .budget-info div {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  input,
+  select,
+  button {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .expense-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .expense-header {
+    grid-template-columns: 1fr auto;
+    width: 100%;
+  }
+
+  .expense-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .expense-note {
+    margin-left: 0;
+    font-size: 0.8rem;
+  }
+
+  .plan-card {
+    padding: 16px;
+  }
+
+  .plan-card h3 {
+    font-size: 1.15rem;
+  }
+
+  .plan-desc {
+    font-size: 0.85rem;
+  }
+
+  .chart-panel {
+    min-height: 320px;
+    padding: 14px;
+  }
+
+  .chart-panel h3 {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .chart-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 6px;
+  }
+
+  .chart-legend {
+    gap: 8px;
+  }
+
+  .chart-legend li {
+    font-size: 0.85rem;
+  }
+
+  .theme-toggle {
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .theme-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .warnings-header {
+    padding: 10px 14px;
+  }
+
+  .warnings-title {
+    font-size: 0.85rem;
+  }
+
+  .warning-item {
+    padding: 10px 14px;
+  }
+
+  .warning-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .warning-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .warning-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .section-header button {
+    width: 100%;
+  }
+}
+
+/* Extra small mobile (360px) */
+@media (max-width: 360px) {
+  body {
+    padding: 12px 6px;
+  }
+
+  .header h1 {
+    font-size: 1.4rem;
+  }
+
+  .header p {
+    font-size: 0.8rem;
+  }
+
+  section {
+    padding: 14px;
+  }
+
+  section h2 {
+    font-size: 1.05rem;
+  }
+
+  input,
+  select,
+  button {
+    padding: 9px;
+    font-size: 0.9rem;
+  }
+
+  .chart-panel {
+    min-height: 280px;
+    padding: 12px;
+  }
+
+  .plan-card {
+    padding: 14px;
+  }
+
+  .expense-item {
+    padding: 10px 12px;
   }
 }
 
