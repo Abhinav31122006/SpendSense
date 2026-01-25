@@ -760,27 +760,31 @@ function exportToCSV() {
   );
 
   // Create CSV header
-  let csv = "Date,Category,Amount (₹),Notes\n";
+  let csv = "Date,Category,Amount,Notes\n";
 
   // Add each expense as a row
   sortedExpenses.forEach(expense => {
     const date = expense.date;
-    const category = expense.category;
+    const category = `"${expense.category}"`;
     const amount = expense.amount;
     // Escape notes that contain commas or quotes
-    const notes = expense.note ? `"${expense.note.replace(/"/g, '""')}"` : "";
+    const notes = expense.note ? `"${expense.note.replace(/"/g, '""')}"` : '""';
     
     csv += `${date},${category},${amount},${notes}\n`;
   });
 
   // Add summary statistics at the bottom
   const totalSpent = sortedExpenses.reduce((sum, exp) => sum + exp.amount, 0);
-  csv += `\nTotal Spent,,,₹${totalSpent}\n`;
-  csv += `Budget,,,₹${appState.budget}\n`;
-  csv += `Remaining,,,₹${appState.budget - totalSpent}\n`;
+  csv += `\n"Total Spent","","",${totalSpent}\n`;
+  csv += `"Budget","","",${appState.budget}\n`;
+  csv += `"Remaining","","",${appState.budget - totalSpent}\n`;
+
+  // Add BOM for Excel UTF-8 compatibility
+  const BOM = '\uFEFF';
+  const csvContent = BOM + csv;
 
   // Create download link
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
   
