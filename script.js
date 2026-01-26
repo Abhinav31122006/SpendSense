@@ -942,14 +942,4 @@ function exportToTable() {
 exportBtn.addEventListener("click", () => {
   // Use CSV export by default (Excel compatible)
   exportToCSV();
-  
-  // If you want to show options, uncomment this:
-  /*
-  const choice = confirm("Export as CSV for Excel?\n\nOK = CSV Download\nCancel = HTML Table View");
-  if (choice) {
-    exportToCSV();
-  } else {
-    exportToTable();
-  }
-  */
 });
